@@ -120,11 +120,45 @@
 
 
 # The following are guaranteed to be always set or cheaply calculable:
+#############################################################################
+##
+#A  BaseDomain( <vector> )
+##
+##  <#GAPDoc Label="MatObj_BaseDomain_IsVectorObj">
+##  <ManSection>
+##  <Attr Name="BaseDomain" Arg='vector'/>
+##
+##  <Description>
+##  The semiring <A>vector</A> is defined over.
+##  Note that not all entries of <A>vector</A> necessarily lie in
+##  <C>BaseDomain( <A>vector</A> )</C> with respect to <C>in</C>.
+##  E.g. <A>vector</A> can be defined over a polynomial ring but also contain
+##  integers
+##  (see section&nbsp;<Ref Sect="Fundamental Ideas and Rules"/>).
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##
 DeclareAttribute( "BaseDomain", IsVectorObj );
 # Typically, the base domain will be a ring, it need not be commutative
 # nor associative. For non-associative base domains, the behavior of
 # powering matrices is undefined.
 
+#############################################################################
+##
+#A  Length( <vector> )
+##
+##  <#GAPDoc Label="MatObj_Length_IsVectorObj">
+##  <ManSection>
+##  <Attr Name="Length" Arg='vector'/>
+##
+##  <Description>
+##  returns the length of the vector object <A>vector</A>, which is defined to
+##  be the number of entries of <A>vector</A>.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##
 DeclareAttribute( "Length", IsVectorObj );    # can be zero
 # We have to declare this since a row vector is not necessarily
 # a list! Correspondingly we have to use InstallOtherMethod
@@ -320,21 +354,49 @@ DeclareOperation( "ExtractSubVector", [IsVectorObj,IsList] );
 # historically there already was AddRowVector, so be careful to not break that
 
 # The following "in place" operations exist with the same restrictions:
+#############################################################################
+##
+#O  AddRowVector( <dst>, <src>[, <mul>[, <from>, <to>]] )
+#O  AddRowVector( <dst>, <mul>, <src>, <from>, <to> )
+##
+##  <#GAPDoc Label="MatObj_AddRowVector">
+##  <ManSection>
+##  <Oper Name="AddRowVector" Arg='dst, src[, mul[, from, to]]'/>
+##  <Oper Name="AddRowVector" Arg='dst, mul, src, from, to'/>
+##
+##  <Description>
+##  Adds the product of <A>src</A> and <A>mul</A> to <A>dst</A>,
+##  changing <A>dst</A>.
+##  If the argument form <A>dst, mul, src, from, to<A/> is used,
+##  <A>src</A> is multiplied by <A>mul</A> from the left,
+##  otherwise multiplication happens from the right.
+##  If <A>from</A> and <A>to</A> are given then only the index range
+##  <C>[ <A>from</A> .. <A>to</A> ]</C> is guaranteed to be affected.
+##  Other indices <E>may</E> be affected, if it is more convenient to do so.
+##  Even when <A>from</A> and <A>to</A> are given,
+##  <A>dst</A> and <A>src</A> must be row vectors of the <E>same</E> length.
+##  <P/>
+##  If <A>mul</A> is not given either then this operation simply adds
+##  <A>src</A> to <A>dst</A>.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##
 DeclareOperation( "AddRowVector", 
   [ IsVectorObj and IsMutable, IsVectorObj ] );
 
-# vec = vec2 * scal
+# vec += vec2 * scal
 DeclareOperation( "AddRowVector", 
   [ IsVectorObj and IsMutable,  IsVectorObj, IsObject ] );
-# vec = scal * vec2
+# vec += scal * vec2
 DeclareOperation( "AddRowVector", 
   [ IsVectorObj and IsMutable, IsObject, IsVectorObj ] );
 
-# vec := vec2{[to..from]} * scal
+# vec += vec2{[to..from]} * scal
 DeclareOperation( "AddRowVector", 
   [ IsVectorObj and IsMutable, IsVectorObj, IsObject, IsPosInt, IsPosInt ] );
 
-# vec := scal * vec2{[to..from]}
+# vec += scal * vec2{[to..from]}
 DeclareOperation( "AddRowVector", 
   [ IsVectorObj and IsMutable, IsObject, IsVectorObj, IsPosInt, IsPosInt ] );
 
@@ -588,6 +650,25 @@ DeclareOperation( "DistanceOfVectors", [IsVectorObj, IsVectorObj] );
 ############################################################################
 
 # The following are guaranteed to be always set or cheaply calculable:
+#############################################################################
+##
+#A  BaseDomain( <matrix> )
+##
+##  <#GAPDoc Label="MatObj_BaseDomain_IsMatrixObj">
+##  <ManSection>
+##  <Attr Name="BaseDomain" Arg='matrix'/>
+##
+##  <Description>
+##  The semiring <A>matrix</A> is defined over.
+##  Note that not all entries of <A>matrix</A> necessarily lie in
+##  <C>BaseDomain( <A>matrix</A> )</C> with respect to <C>in</C>.
+##  E.g. <A>matrix</A> can be defined over a polynomial ring but also contain
+##  integers
+##  (see section&nbsp;<Ref Sect="Fundamental Ideas and Rules"/>).
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##
 DeclareAttribute( "BaseDomain", IsMatrixObj );
 # Typically, the base domain will be a ring, it need not be commutative
 # nor associative. For non-associative base domains, the behavior of
