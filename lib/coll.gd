@@ -289,6 +289,14 @@ BIND_GLOBAL( "DeclareCategoryCollections", function( name )
     BIND_GLOBAL( coll_name, CategoryCollections( VALUE_GLOBAL( name ) ) );
 end );
 
+#############################################################################
+##
+##  SYNONYMS . . . . . . . . . . list of pairs of synonyms and original names
+##
+##  This list is populated by DeclareSynonym.
+##  It is used in the function HELP_SEARCH_ALTERNATIVES to make the help
+##  system aware of synonyms.
+BIND_GLOBAL( "SYNONYMS", [] );
 
 #############################################################################
 ##
@@ -343,6 +351,7 @@ BIND_GLOBAL( "DeclareSynonym", function( name, value )
         fi;
     else
         BIND_GLOBAL( name, value );
+        # ADD_LIST( SYNONYMS, TODO  );
     fi;
 end );
 
