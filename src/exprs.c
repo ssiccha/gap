@@ -33,6 +33,7 @@
 #include "precord.h"
 #include "range.h"
 #include "records.h"
+#include "scanner.h"
 #include "stringobj.h"
 #include "vars.h"
 
@@ -1494,6 +1495,16 @@ static void PrintTrueExpr(Expr expr)
     Pr( "true", 0L, 0L );
 }
 
+/****************************************************************************
+**
+*F  StringTrueExpr(<expr>) . . . . . . . . . . . print literal true expression
+*/
+Obj             StringTrueExpr (
+    Obj string, Expr expr )
+{
+    return AppendBufToString(string, "true test", 9);
+}
+
 
 /****************************************************************************
 **
@@ -1804,6 +1815,14 @@ static Int InitKernel (
     InstallEvalExprFunc( T_STRING_EXPR    , EvalStringExpr);
     InstallEvalExprFunc( T_REC_EXPR       , EvalRecExpr);
     InstallEvalExprFunc( T_REC_TILDE_EXPR , EvalRecTildeExpr);
+
+    /* clear the tables for the string dispatching                       */
+    for ( type = 0; type < 256; type++ ) {
+        InstallStringExprFunc( type , 0 );
+    }
+
+    /* install the prototype StringExpr functions                          */
+    InstallStringExprFunc( T_TRUE_EXPR     , StringTrueExpr);
 
     /* clear the tables for the printing dispatching                       */
     for ( type = 0; type < 256; type++ ) {
