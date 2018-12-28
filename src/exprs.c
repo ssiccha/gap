@@ -1264,7 +1264,17 @@ static void RecExpr2(Obj rec, Expr expr)
 void            PrintExpr (
     Expr                expr )
 {
-    (*PrintExprFuncs[ TNUM_EXPR(expr) ])( expr );
+    // POC: exchange PrintExpr by StringExpr
+    // While transitioning from using PrintExprFuncs to StringExprFuncs,
+    // we only use an entry of StringExprFuncs if it is non-zero.
+    Obj (* stringFuncPtr ) ( Obj string, Expr expr );
+    stringFuncPtr = StringExprFuncs[ TNUM_EXPR(expr) ];
+    if (stringFuncPtr == 0)
+        (*PrintExprFuncs[ TNUM_EXPR(expr) ])( expr );
+    else {
+        Obj string = 0;
+        Pr(CSTR_STRING((*stringFuncPtr)( string, expr )), 0L, 0L);
+    }
 }
 
 
@@ -1278,6 +1288,12 @@ void            PrintExpr (
 */
 void            (* PrintExprFuncs[256] ) ( Expr expr );
 
+// POC: exchange PrintExpr by StringExpr
+Obj      StringExpr( Obj string, Expr expr )
+{
+    return (*StringExprFuncs[ TNUM_EXPR(expr) ])( string, expr );
+}
+Obj      (* StringExprFuncs[256] ) ( Obj string, Expr expr );
 
 /****************************************************************************
 **
