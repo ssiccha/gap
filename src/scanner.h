@@ -297,6 +297,9 @@ EXPORT_INLINE void SyntaxWarning(const Char * msg)
     SyntaxWarningWithOffset(msg, 0);
 }
 
+// POC: exchange PrintExpr by StringExpr
+// FIXME: Move this to stringobj.c/h
+extern Obj AppendBufToString(Obj, const char *, UInt);
 
 /****************************************************************************
 **

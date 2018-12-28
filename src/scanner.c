@@ -137,7 +137,7 @@ void SyntaxWarningWithOffset(const Char * msg, Int tokenoffset)
 **  given as an argument, or created from scratch.
 **
 */
-static Obj AppendBufToString(Obj string, const char * buf, UInt bufsize)
+Obj AppendBufToString(Obj string, const char * buf, UInt bufsize)
 {
     char *s;
     if (string == 0) {
