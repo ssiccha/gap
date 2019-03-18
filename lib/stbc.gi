@@ -1528,7 +1528,7 @@ end);
 #F  OrbitStabChain( <S>, <pnt> )  . . . . . . . . . orbit of stabilizer chain
 ##
 InstallGlobalFunction(OrbitStabChain,function( S, pnt )
-    if IsBound( S.edges )  and  IsBound( S.edges[ pnt ] )  then
+    if (IsBound(S.orbit) and S.orbit[1] = pnt) or (IsBound( S.edges )  and  IsBound( S.edges[ pnt ] ))  then
         return ShallowCopy( S.orbit );
     else
         return OrbitPerms( S.generators, pnt );
