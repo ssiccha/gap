@@ -1851,6 +1851,7 @@ static Int InitKernel (
 
     /* install the prototype StringExpr functions                          */
     InstallStringExprFunc( T_TRUE_EXPR     , StringTrueExpr);
+    InstallStringExprFunc( T_LIST_EXPR     , StringListExpr);
 
     /* clear the tables for the printing dispatching                       */
     for ( type = 0; type < 256; type++ ) {
