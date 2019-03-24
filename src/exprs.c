@@ -1600,6 +1600,34 @@ static void PrintListExpr(Expr expr)
     Pr(" %4<]",0L,0L);
 }
 
+static Obj StringListExpr(Obj string, Expr expr)
+{
+    Int                 len;            /* logical length of <list>        */
+    Expr                elm;            /* one element from <list>         */
+    Int                 i;              /* loop variable                   */
+
+    /* get the logical length of the list                                  */
+    len = SIZE_EXPR( expr ) / sizeof(Expr);
+
+    /* loop over the entries                                               */
+    AppendBufToString(string, "%2>[ %2>", 4);
+    for ( i = 1;  i <= len;  i++ ) {
+        elm = READ_EXPR(expr, i - 1);
+        if ( elm != 0 ) {
+            if ( 1 < i )  AppendBufToString(string, "%<,%< %2>", 5);
+            // Check whether StringExpr is available for this expr type
+            if (StringExprFuncs[ TNUM_EXPR(expr) ] == 0)
+                PrintExpr( elm );
+            else
+                StringExpr(string, elm);
+        }
+        else {
+            if ( 1 < i )  AppendBufToString(string, "%2<,%2>", 3);
+        }
+    }
+    return AppendBufToString(string, " %4<]", 3);
+}
+
 
 /****************************************************************************
 **
