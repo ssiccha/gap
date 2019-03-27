@@ -1,32 +1,23 @@
 # Contributing to GAP
 
-We invite everyone to contribute by submitting patches, pull requests,
-bug reports, and code reviews. We would like to make the contributing process as easy as
-possible.
+We invite everyone to contribute by submitting bug reports, suggestions for
+improvement, code contributions, and code reviews.
+We would like to make the contributing process as easy as possible.
 
+## Issues: bug reports, discussions, suggestions for improvement
+TODO: explain what an issue is
 
-## Packages versus contributions to the "core" system
+* Before you submit an issue please check whether an identical issue
+  was already submitted: 
+  [issues](https://github.com/gap-system/gap/issues).
+  
+## Pull Requests: code contributions
+TODO: explain what a PR is
 
-One way of contributing to GAP is to write a
-[GAP package](https://www.gap-system.org/Packages/packages.html) and send it
-to us to consider for redistribution with GAP.  This is appropriate if your
-contribution adds a body of functionality for some area of mathematics (or
-some coherent batch of system functionality). A package is also appropriate
-if you plan to continue to develop your code in the future. You will retain
-control of your code and be recorded as author and maintainer of it.
-
-Packages are not an appropriate way to release fixes or extremely small
-changes, or to impose your own preferences for, for instance, how things
-should be printed.
-
-
-## Issue reporting and code contributions
-
-* Before you report an issue, or wish to add functionality, please try
-  and check to see if there are existing
-  [issues](https://github.com/gap-system/gap/issues) or
+* Before you submit a pull request please check whether an identical pull request
+  was already submitted: 
   [pull requests](https://github.com/gap-system/gap/pulls).
-  We do not want you wasting your time duplicating somebody else's work.
+* We do not want you wasting your time duplicating somebody else's work.
 * For substantial changes it is also advisable to contact us before
   you start work to discuss your ideas.
 * You should be prepared to wait until your pull request or patch
@@ -195,6 +186,22 @@ This section is based on <https://lornajane.net/posts/2015/code-reviews-before-y
 * Are new features documented if necessary?
 * Double check whether the changes should be included into the release notes.
   If not, label the issue / PR accordingly.
+
+
+
+## Packages versus contributions to the "core" system
+
+One way of contributing to GAP is to write a
+[GAP package](https://www.gap-system.org/Packages/packages.html) and send it
+to us to consider for redistribution with GAP.  This is appropriate if your
+contribution adds a body of functionality for some area of mathematics (or
+some coherent batch of system functionality). A package is also appropriate
+if you plan to continue to develop your code in the future. You will retain
+control of your code and be recorded as author and maintainer of it.
+
+Packages are not an appropriate way to release fixes or extremely small
+changes, or to impose your own preferences for, for instance, how things
+should be printed.
 
 
 ## Additional Resources
