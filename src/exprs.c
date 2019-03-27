@@ -1610,11 +1610,13 @@ static Obj StringListExpr(Obj string, Expr expr)
     len = SIZE_EXPR( expr ) / sizeof(Expr);
 
     /* loop over the entries                                               */
-    AppendBufToString(string, "%2>[ %2>", 4);
+    // if string == 0 then we need to set string to the string that gets
+    // created by AppendBufToString
+    string = AppendBufToString(string, "[_", 2);
     for ( i = 1;  i <= len;  i++ ) {
         elm = READ_EXPR(expr, i - 1);
         if ( elm != 0 ) {
-            if ( 1 < i )  AppendBufToString(string, "%<,%< %2>", 5);
+            if ( 1 < i )  AppendBufToString(string, ", ", 2);
             // Check whether StringExpr is available for this expr type
             if (StringExprFuncs[ TNUM_EXPR(expr) ] == 0)
                 PrintExpr( elm );
@@ -1622,10 +1624,10 @@ static Obj StringListExpr(Obj string, Expr expr)
                 StringExpr(string, elm);
         }
         else {
-            if ( 1 < i )  AppendBufToString(string, "%2<,%2>", 3);
+            if ( 1 < i )  AppendBufToString(string, ",", 1);
         }
     }
-    return AppendBufToString(string, " %4<]", 3);
+    return AppendBufToString(string, " ]", 2);
 }
 
 
