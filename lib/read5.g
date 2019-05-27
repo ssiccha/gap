@@ -29,6 +29,7 @@ ReadLib( "mapping.gi"  );
 ReadLib( "mapprep.gi"  );
 ReadLib( "mapphomo.gi" );
 ReadLib( "relation.gi" );
+ReadLib( "productdomain.gi"   );
 
 ReadLib( "magma.gi"    );
 ReadLib( "mgmideal.gi" );
