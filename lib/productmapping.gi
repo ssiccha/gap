@@ -1,6 +1,8 @@
 #############################################################################
 ##
 #   DirectProductMapping
+# TODO Make this an action homomorphism if each arg is an IsActionHomomorphism
+# TODO Install specialised IsSurjective function
 InstallGlobalFunction(DirectProductMapping,
 function(args)
     local source, range, fun, dim, prefun;
