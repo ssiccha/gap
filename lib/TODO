@@ -1,0 +1,4 @@
+Add
+- = method for DPDs and DPMappings
+- IsInjective, IsSurjective, IsBijective methods for DPMappings if possible
+- method for general domains to figure out whether they are DPDs
