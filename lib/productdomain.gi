@@ -106,7 +106,7 @@ InstallMethod(AsList,
 function(dom)
     local bijection;
     bijection := BijectiveMappingFromRangeToDirectProductDomain(dom);
-    return List([1 .. Size(dom)], x -> Image(bijection, x));
+    return List([1 .. Size(dom)], x -> ImageElm(bijection, x));
 end);
 
 InstallMethod(Enumerator,
