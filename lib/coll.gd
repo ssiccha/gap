@@ -1925,7 +1925,8 @@ DeclareGlobalFunction( "EnumeratorOfSubset" );
 ##  elements of <A>D</A> (in general <A>enum</A> is <E>not</E> sorted),
 ##  and methods for <Ref Attr="Length"/>,
 ##  <Ref Oper="IsBound" Label="for a list index"/>,
-##  and <Ref Oper="PrintObj"/> may use <A>D</A>.
+##  and <Ref Oper="PrintObj"/> may use <A>D</A> via
+##  <Ref Attr="UnderlyingCollection"/>.
 ##  <!-- is this really true for Length?-->
 ##  <P/>
 ##  If one wants to describe the result without creating a domain then the
