@@ -104,52 +104,87 @@ InstallMethod(AsList,
 "for an IsDirectProductDomain",
 [IsDirectProductDomain],
 function(dom)
-    local bijection;
-    bijection := BijectiveMappingFromRangeToDirectProductDomain(dom);
-    return List([1 .. Size(dom)], x -> ImageElm(bijection, x));
+    local bijections, domAsList;
+    bijections := BijectionsBetweenDirectProductDomainAndRange(dom);
+    domAsList := List([1 .. Size(dom)], bijections.elementPosition);
+    if bijections.canSort then
+        SetIsSSortedList(domAsList, true);
+    fi;
+    return domAsList;
 end);
 
 InstallMethod(Enumerator,
 "for an IsDirectProductDomain",
 [IsDirectProductDomain],
-AsList);
+function(dom)
+    local bijections, elementPosition, positionElement, elementNumber,
+        numberElement, enumDom;
+    bijections := BijectionsBetweenDirectProductDomainAndRange(dom);
+    elementPosition := bijections.elementPosition;
+    positionElement := bijections.positionElement;
+    elementNumber := {dom, pos} -> elementPosition(pos);
+    numberElement := {dom, elm} -> positionElement(elm);
+    enumDom := EnumeratorByFunctions(dom,
+                                     rec(ElementNumber := elementNumber,
+                                         NumberElement := numberElement));
+    if bijections.canSort then
+        SetIsSSortedList(enumDom, true);
+    fi;
+    return enumDom;
+end);
 
 #############################################################################
 ##
-InstallGlobalFunction(BijectiveMappingFromDirectProductDomainToRange,
+#
+# If every component of dom is sortable (see CanEasilySortElements), then the
+# bijective mapping we construct will be order preserving.
+InstallGlobalFunction(BijectionsBetweenDirectProductDomainAndRange,
 function(dom)
-    local comps, nrComps, sizes, productsOfSizes, compsAsSets,
-        rangeFirstValues, fun, invFun, range, i;
-    if not IsAttributeStoringRep(dom)
-            or not IsDirectProductDomain(dom) then
-        ErrorNoReturn("<dom> must be an attribute storing ",
-                      "IsDirectProductDomain");
+    local componentElementFamilies, canSort, comps, nrComps, sizes,
+        compsAsLists, elementsFamily, rangeFirstValues, positionElement,
+        elementPosition;
+    if not IsDirectProductDomain(dom) then
+        ErrorNoReturn("<dom> must be an IsDirectProductDomain object");
     fi;
+    # Figure out whether every component of dom is sortable.
+    # If so we transform them into sets with AsSet and use PositionSorted.
+    # Otherwise we have to use AsList and Position.
+    componentElementFamilies := ElementsFamily(FamilyObj(dom));
+    componentElementFamilies :=
+        componentElementFamilies!.ComponentsOfDirectProductElementsFamily;
+    canSort := ForAll(componentElementFamilies, CanEasilySortElementsFamily);
+    # Handle edge cases
     if IsEmpty(dom) then
-        range := Domain(CollectionsFamily(CyclotomicsFamily), []);
-        return MappingByFunction(dom, range, x -> 0, x -> 0);
+        return rec(positionElement := x -> 0,
+                   elementPosition := x -> 0,
+                   canSort := canSort);
     elif 0 = DimensionOfDirectProductDomain(dom) then
-        range := Domain([1]);
-        return MappingByFunction(dom, range,
-                                 x -> 1, x -> DirectProductElement([]));
+        return rec(positionElement := x -> 1,
+                   elementPosition := x -> DirectProductElement([]),
+                   canSort := canSort);
     fi;
-    range := Domain([1 .. Size(dom)]);
+    # Set up the "constant" variables the bijections will use in every call.
     comps := ComponentsOfDirectProductDomain(dom);
     nrComps := Length(comps);
     sizes := List(comps, Size);
-    compsAsSets := List(comps, AsSet);
-    # We compute the bijection into the range
-    # [1 .. Size(dom)] as follows:
-    # Let d := nrComps, for i <= d let n_i := Size(comps[i]), and let
-    # p_i := n_d * ... * n_{i + 1}. Note p_d = 1.
-    # For an element e of dom denote by
-    # a_i the value Position(compsAsSets[i], e) - 1.
-    # Then we map e to
-    #   1 + \sum a_i * p_i.
-    # We use a specialised function if all components are ranges:
-    if ForAll(compsAsSets, IsRangeRep) then
-        rangeFirstValues := List(compsAsSets, x -> x[1]);
-        fun := function(x)
+    if canSort then
+        compsAsLists := List(comps, AsSet);
+    else
+        compsAsLists := List(comps, AsList);
+    fi;
+    elementsFamily := ElementsFamily(FamilyObj(dom));
+    # We compute the bijection into the range [1 .. Size(dom)] as follows:
+    #     Let d := nrComps, for i <= d let n_i := Size(comps[i]), and let
+    #     p_i := n_d * ... * n_{i + 1}. Note p_d = 1.
+    #     For an element e of dom denote by
+    #     a_i the value Position(compsAsLists[i], e) - 1.
+    #     Then we map e to
+    #       1 + \sum a_i * p_i.
+    # We use a specialised function if all components are ranges. In this case
+    # canSort must be true.
+    if ForAll(compsAsLists, IsRangeRep) then
+        rangeFirstValues := List(compsAsLists, x -> x[1]);
+        positionElement := function(x)
             local sum, i;
             sum := 0
                 + x[1] - rangeFirstValues[1];
@@ -159,35 +194,66 @@ function(dom)
             od;
             return 1 + sum;
         end;
-    else
-        fun := function(x)
+    elif canSort then
+        positionElement := function(x)
             local sum, i;
             sum := 0
-                + PositionSorted(compsAsSets[1], x[1]) - 1;
+                + PositionSorted(compsAsLists[1], x[1]) - 1;
             for i in [2 .. nrComps] do
                 sum := sum * sizes[i]
-                    + PositionSorted(compsAsSets[i], x[i]) - 1;
+                    + PositionSorted(compsAsLists[i], x[i]) - 1;
+            od;
+            return 1 + sum;
+        end;
+    else
+        positionElement := function(x)
+            local sum, i;
+            sum := 0
+                + Position(compsAsLists[1], x[1]) - 1;
+            for i in [2 .. nrComps] do
+                sum := sum * sizes[i]
+                    + Position(compsAsLists[i], x[i]) - 1;
             od;
             return 1 + sum;
         end;
     fi;
-    invFun := function(x)
+    elementPosition := function(x)
         local tuple, currentComp, rem, i;
         tuple := [];
         # Correction since lists don't start at 0.
         x := x - 1;
-        currentComp := compsAsSets[nrComps];
+        currentComp := compsAsLists[nrComps];
         rem := RemInt(x, sizes[nrComps]);
-        tuple[nrComps] := currentComp[rem + 1];
+        tuple[nrComps] := Immutable(currentComp[rem + 1]);
         for i in [nrComps - 1 , nrComps - 2 .. 1] do
             x := (x - rem) / sizes[i + 1];
-            currentComp := compsAsSets[i];
+            currentComp := compsAsLists[i];
             rem := RemInt(x, sizes[i]);
-            tuple[i] := currentComp[rem + 1];
+            tuple[i] := Immutable(currentComp[rem + 1]);
         od;
-        return DirectProductElement(tuple);
+        # This avoids DirectProductElementNC which copies its second argument.
+        # Since we just created `tuple` ourselves we don't need to do that.
+        return Objectify(elementsFamily!.defaultTupleType, tuple);
     end;
-    return MappingByFunction(dom, range, fun, invFun);
+    return rec(positionElement := positionElement,
+               elementPosition := elementPosition,
+               canSort := canSort);
+end);
+
+InstallGlobalFunction(BijectiveMappingFromDirectProductDomainToRange,
+function(dom)
+    local range, bijections;
+    bijections := BijectionsBetweenDirectProductDomainAndRange(dom);
+    if IsEmpty(dom) then
+        range := Domain(CollectionsFamily(CyclotomicsFamily), []);
+    elif 0 = DimensionOfDirectProductDomain(dom) then
+        range := Domain([1]);
+    else
+        range := Domain([1 .. Size(dom)]);
+    fi;
+    return MappingByFunction(dom, range,
+                             bijections.positionElement,
+                             bijections.elementPosition);
 end);
 
 InstallGlobalFunction(BijectiveMappingFromRangeToDirectProductDomain,

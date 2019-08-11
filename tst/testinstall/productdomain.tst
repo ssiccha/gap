@@ -17,6 +17,13 @@ gap> DirectProductFamily([CyclotomicsFamily, ]);
 Error, <args> must be a dense list of collection families
 
 # DirectProductDomain
+# error handling
+gap> DirectProductDomain([CyclotomicsFamily]);
+Error, args must be a dense list of domains
+gap> DirectProductDomain(Domain([1]), -1);
+Error, <k> must be a nonnegative integer
+
+# DirectProductDomain
 # of empty domains, dim 2
 gap> d := Domain(FamilyObj([1]), []);
 Domain([  ])
@@ -71,7 +78,7 @@ true
 gap> AsList(dpdDim0);
 [ DirectProductElement( [  ] ) ]
 gap> Enumerator(dpdDim0);
-[ DirectProductElement( [  ] ) ]
+<enumerator of DirectProductDomain([  ])>
 gap> dpdDim0 = emptyDPDDim2;
 false
 
@@ -180,14 +187,11 @@ true
 gap> dpdOfGroups = emptyDPDDim2;
 false
 
-# DirectProductDomain
-# error handling
-gap> DirectProductDomain([CyclotomicsFamily]);
-Error, args must be a dense list of domains
-gap> DirectProductDomain(dpd, -1);
-Error, <k> must be a nonnegative integer
-
 # BijectiveMappingFromDirectProductDomainToRange
+# error handling
+gap> BijectiveMappingFromDirectProductDomainToRange(Domain([1]));
+Error, <dom> must be an IsDirectProductDomain object
+
 # empty dim 2
 gap> bijToRange := BijectiveMappingFromDirectProductDomainToRange(emptyDPDDim2);
 MappingByFunction( DirectProductDomain([ Domain([  ]), Domain(
@@ -259,14 +263,6 @@ gap> ForAll([1 .. Size(dpdOfGroups)],
 true
 gap> ForAll(tups, tup -> tup = PreImage(bijToRange, Image(bijToRange, tup)));
 true
-
-# error handling
-gap> dpdNotAttributeStoring := Objectify(
->    NewType(DirectProductFamily([]), IsDirectProductDomain),
->    rec()
-> );;
-gap> BijectiveMappingFromDirectProductDomainToRange(dpdNotAttributeStoring);
-Error, <dom> must be an attribute storing IsDirectProductDomain
 
 #
 gap> STOP_TEST("productdomain.tst");

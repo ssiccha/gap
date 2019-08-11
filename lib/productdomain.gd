@@ -55,5 +55,6 @@ DeclareOperation("DirectProductDomain", [IsDenseList]);
 DeclareAttribute("ComponentsOfDirectProductDomain", IsDirectProductDomain);
 DeclareAttribute("DimensionOfDirectProductDomain", IsDirectProductDomain);
 
+DeclareGlobalFunction("BijectionsBetweenDirectProductDomainAndRange");
 DeclareGlobalFunction("BijectiveMappingFromDirectProductDomainToRange");
 DeclareGlobalFunction("BijectiveMappingFromRangeToDirectProductDomain");
