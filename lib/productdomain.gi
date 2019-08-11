@@ -78,6 +78,7 @@ function(dom)
     return size;
 end);
 
+# TODO: rename to NrComponents or NrComponentsOfDPD
 InstallMethod(DimensionOfDirectProductDomain,
 "for an IsDirectProductDomain",
 [IsDirectProductDomain],
