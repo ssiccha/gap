@@ -271,21 +271,21 @@ InstallMethod( CanEasilyCompareElements,
 #M  DirectProductElementNC( <dpelmfam>, <objlist> )   . make a direct product
 #M                                                                    element
 ##
-##  Note that we really have to copy the list passed, even if it is immutable
-##  as we are going to call `Objectify'.
-##
 InstallMethod( DirectProductElementNC,
     "for a direct product elements family, and a list",
     [ IsDirectProductElementFamily, IsList ],
     function( fam, objlist )
-    local t;
+    local newObj, i;
     Assert( 2, ComponentsOfDirectProductElementsFamily( fam )
                    = List( objlist, FamilyObj ) );
-    t:= Objectify( fam!.defaultTupleType,
-            PlainListCopy( List( objlist, Immutable ) ) );
+    newObj := PlainListCopy( objlist );
+    for i in [1 .. Length(newObj)] do
+        newObj[i] := Immutable(newObj[i]);
+    od;
+    newObj := Objectify( fam!.defaultTupleType, newObj );
     Info( InfoDirectProductElements, 3,
-          "Created a new DirectProductElement ", t );
-    return t;
+          "Created a new DirectProductElement ", newObj );
+    return newObj;
     end );
 
 
