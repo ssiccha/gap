@@ -38,9 +38,9 @@ gap> DimensionOfDirectProductDomain(emptyDPDDim2);
 gap> DirectProductElement([]) in emptyDPDDim2;
 false
 gap> AsList(emptyDPDDim2);
-[  ]
+<enumerator of DirectProductDomain([ Domain([  ]), Domain([  ]) ])>
 gap> Enumerator(emptyDPDDim2);
-[  ]
+<enumerator of DirectProductDomain([ Domain([  ]), Domain([  ]) ])>
 
 # of empty domains, dim 3
 gap> emptyDPDDim3 := DirectProductDomain(d, 3);
@@ -54,9 +54,11 @@ gap> DimensionOfDirectProductDomain(emptyDPDDim3);
 gap> DirectProductElement([]) in emptyDPDDim3;
 false
 gap> AsList(emptyDPDDim3);
-[  ]
+<enumerator of DirectProductDomain([ Domain([  ]), Domain([  ]), Domain(
+[  ]) ])>
 gap> Enumerator(emptyDPDDim3);
-[  ]
+<enumerator of DirectProductDomain([ Domain([  ]), Domain([  ]), Domain(
+[  ]) ])>
 gap> emptyDPDDim2 = emptyDPDDim3;
 false
 
@@ -103,18 +105,8 @@ false
 gap> DirectProductElement([4, 6, 9]) in dpd;
 true
 gap> AsList(dpd);
-[ DirectProductElement( [ 1, 5, 8 ] ), DirectProductElement( [ 1, 5, 9 ] ), 
-  DirectProductElement( [ 1, 6, 8 ] ), DirectProductElement( [ 1, 6, 9 ] ), 
-  DirectProductElement( [ 1, 7, 8 ] ), DirectProductElement( [ 1, 7, 9 ] ), 
-  DirectProductElement( [ 2, 5, 8 ] ), DirectProductElement( [ 2, 5, 9 ] ), 
-  DirectProductElement( [ 2, 6, 8 ] ), DirectProductElement( [ 2, 6, 9 ] ), 
-  DirectProductElement( [ 2, 7, 8 ] ), DirectProductElement( [ 2, 7, 9 ] ), 
-  DirectProductElement( [ 3, 5, 8 ] ), DirectProductElement( [ 3, 5, 9 ] ), 
-  DirectProductElement( [ 3, 6, 8 ] ), DirectProductElement( [ 3, 6, 9 ] ), 
-  DirectProductElement( [ 3, 7, 8 ] ), DirectProductElement( [ 3, 7, 9 ] ), 
-  DirectProductElement( [ 4, 5, 8 ] ), DirectProductElement( [ 4, 5, 9 ] ), 
-  DirectProductElement( [ 4, 6, 8 ] ), DirectProductElement( [ 4, 6, 9 ] ), 
-  DirectProductElement( [ 4, 7, 8 ] ), DirectProductElement( [ 4, 7, 9 ] ) ]
+<enumerator of DirectProductDomain([ Domain([ 1 .. 4 ]), Domain(
+[ 5 .. 7 ]), Domain([ 8 .. 9 ]) ])>
 gap> Size(dpd) = Size(AsList(dpd));
 true
 gap> IsSSortedList(AsList(dpd));
@@ -146,38 +138,8 @@ false
 gap> DirectProductElement([g1.1, g1.2, g2.1]) in dpdOfGroups;
 true
 gap> AsList(dpdOfGroups);
-[ DirectProductElement( [ <identity> of ..., <identity> of ..., () ] ), 
-  DirectProductElement( [ <identity> of ..., <identity> of ..., (1,2) ] ), 
-  DirectProductElement( [ <identity> of ..., f1, () ] ), 
-  DirectProductElement( [ <identity> of ..., f1, (1,2) ] ), 
-  DirectProductElement( [ <identity> of ..., f2, () ] ), 
-  DirectProductElement( [ <identity> of ..., f2, (1,2) ] ), 
-  DirectProductElement( [ <identity> of ..., f1*f2, () ] ), 
-  DirectProductElement( [ <identity> of ..., f1*f2, (1,2) ] ), 
-  DirectProductElement( [ f1, <identity> of ..., () ] ), 
-  DirectProductElement( [ f1, <identity> of ..., (1,2) ] ), 
-  DirectProductElement( [ f1, f1, () ] ), 
-  DirectProductElement( [ f1, f1, (1,2) ] ), 
-  DirectProductElement( [ f1, f2, () ] ), 
-  DirectProductElement( [ f1, f2, (1,2) ] ), 
-  DirectProductElement( [ f1, f1*f2, () ] ), 
-  DirectProductElement( [ f1, f1*f2, (1,2) ] ), 
-  DirectProductElement( [ f2, <identity> of ..., () ] ), 
-  DirectProductElement( [ f2, <identity> of ..., (1,2) ] ), 
-  DirectProductElement( [ f2, f1, () ] ), 
-  DirectProductElement( [ f2, f1, (1,2) ] ), 
-  DirectProductElement( [ f2, f2, () ] ), 
-  DirectProductElement( [ f2, f2, (1,2) ] ), 
-  DirectProductElement( [ f2, f1*f2, () ] ), 
-  DirectProductElement( [ f2, f1*f2, (1,2) ] ), 
-  DirectProductElement( [ f1*f2, <identity> of ..., () ] ), 
-  DirectProductElement( [ f1*f2, <identity> of ..., (1,2) ] ), 
-  DirectProductElement( [ f1*f2, f1, () ] ), 
-  DirectProductElement( [ f1*f2, f1, (1,2) ] ), 
-  DirectProductElement( [ f1*f2, f2, () ] ), 
-  DirectProductElement( [ f1*f2, f2, (1,2) ] ), 
-  DirectProductElement( [ f1*f2, f1*f2, () ] ), 
-  DirectProductElement( [ f1*f2, f1*f2, (1,2) ] ) ]
+<enumerator of DirectProductDomain([ Group( [ f1, f2 ] ), Group( 
+[ f1, f2 ] ), Group( [ (1,2) ] ) ])>
 gap> Size(dpdOfGroups) = Size(AsList(dpdOfGroups));
 true
 gap> Enumerator(dpdOfGroups) = AsList(dpdOfGroups);

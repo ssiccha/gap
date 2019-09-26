@@ -817,8 +817,9 @@ end);
 #F  WreathProductProductAction( <G>, <H> )   wreath product in product action
 ##
 InstallGlobalFunction( WreathProductProductAction, function( G, H )
-    local  W,  domG,  domI,  map,  I,  deg,  n,  N,  gens,  gen,  i,  list,
-           p,  adic,  q,  Val,  val,  rans,basegens,hgens,info,degI;
+    local  W,  domG,  domI,  map,  I,  deg,  n,  N,  gens,  gen,  i,
+           firstOfDomG, firstOfDomI, list, p,  adic,  q,  Val,  val, rans,
+           basegens, hgens, info, degI;
     
     # get the domain of operation of <G> and <H>
     if IsPermGroup( G )  then
@@ -852,16 +853,34 @@ InstallGlobalFunction( WreathProductProductAction, function( G, H )
     N := deg ^ n;
     gens := [  ];
     basegens:=List([1..n],i->[]);
+    if IsRange( domG ) then
+        firstOfDomG := domG[1];
+    fi;
+    if IsRange( domI ) then
+        firstOfDomI := domI[1];
+    fi;
     for gen  in GeneratorsOfGroup( G )  do
         val := 1;
+        # TODO:
+        # Do this only once if I is transitive. Then basegens[i] :=
+        # OnTuples(basegens[1], top) for top a topgroup element with
+        # 1 ^ top = i.
         for i  in [ 1 .. n ]  do
             Val := val * deg;
-            list := [  ];
-            for p  in [ 0 .. N - 1 ]  do
-                q := QuoInt( p mod Val, val ) + 1;
-                Add( list, p +
-                     ( Position( domG, domG[ q ] ^ gen ) - q ) * val );
-            od;
+            list := ListWithIdenticalEntries(n, 0);
+            if IsRange( domG ) then
+                for p  in [ 0 .. N - 1 ]  do
+                    q := QuoInt( p mod Val, val ) + 1;
+                    list[p + 1] :=
+                        p + ( domG[ q ] ^ gen - firstOfDomG + 1 - q ) * val;
+                od;
+            else
+                for p  in [ 0 .. N - 1 ]  do
+                    q := QuoInt( p mod Val, val ) + 1;
+                    list[p + 1] :=
+                        p + ( Position( domG, domG[ q ] ^ gen ) - q ) * val;
+                od;
+            fi;
             q:=PermList( list + 1 );
             Add(gens,q);
 	    Add(basegens[i],q);
@@ -873,13 +892,20 @@ InstallGlobalFunction( WreathProductProductAction, function( G, H )
         list := [  ];
         for p  in [ 0 .. N - 1 ]  do
             adic := [  ];
-            for i  in [ 0 .. n - 1 ]  do
-                adic[ Position( domI, domI[ n - i ] ^ gen ) ] := p mod deg;
-                p := QuoInt( p, deg );
-            od;
+            if IsRange( domI ) then
+                for i  in [ 1 .. n ]  do
+                    adic[ domI[ i ] ^ gen - firstOfDomI + 1 ] := p mod deg;
+                    p := QuoInt( p, deg );
+                od;
+            else
+                for i  in [ 1 .. n ]  do
+                    adic[ Position( domI, domI[ i ] ^ gen ) ] := p mod deg;
+                    p := QuoInt( p, deg );
+                od;
+            fi;
             q := 0;
-            for i  in adic  do
-                q := q * deg + i;
+            for i  in [Length(adic), Length(adic) - 1 .. 1]  do
+                q := q * deg + adic[i];
             od;
             Add( list, q );
         od;

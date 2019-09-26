@@ -275,13 +275,18 @@ InstallMethod( DirectProductElementNC,
     "for a direct product elements family, and a list",
     [ IsDirectProductElementFamily, IsList ],
     function( fam, objlist )
-    local newObj, i;
+    local len, newObj, i;
     Assert( 2, ComponentsOfDirectProductElementsFamily( fam )
                    = List( objlist, FamilyObj ) );
-    newObj := PlainListCopy( objlist );
+    if not IsSmallList(objlist) then
+        ErrorNoReturn("<objlist> must be a small list");
+    fi;
+    len := Length(objlist);
+    newObj := ListWithIdenticalEntries(len, 0);
     for i in [1 .. Length(newObj)] do
-        newObj[i] := Immutable(newObj[i]);
+        newObj[i+1] := Immutable(objlist[i]);
     od;
+    newObj[1] := len;
     newObj := Objectify( fam!.defaultTupleType, newObj );
     Info( InfoDirectProductElements, 3,
           "Created a new DirectProductElement ", newObj );
@@ -297,11 +302,11 @@ InstallMethod( \[\],
     "for a direct product element in default repres., and a pos. integer",
     [ IsDefaultDirectProductElementRep, IsPosInt ],
     function( dpelm, index )
-    while index > Length( dpelm ) do
+    while index > Length( dpelm ) + 1 do
       index:= Error( "<index> too large for <dpelm>, ",
                      "you may return another index" );
     od;
-    return dpelm![index];
+    return dpelm![index + 1];
     end );
 
 
@@ -313,8 +318,7 @@ InstallMethod( Length,
     "for a direct product element in default representation",
     [ IsDefaultDirectProductElementRep ],
     function( dpelm )
-    return Length( ComponentsOfDirectProductElementsFamily(
-                       FamilyObj( dpelm ) ) );
+    return dpelm![1];
     end );
 
 

@@ -104,14 +104,19 @@ end);
 InstallMethod(AsList,
 "for an IsDirectProductDomain",
 [IsDirectProductDomain],
+Enumerator);
+
+InstallMethod(AsSSortedList,
+"for an IsDirectProductDomain",
+[IsDirectProductDomain],
 function(dom)
-    local bijections, domAsList;
-    bijections := BijectionsBetweenDirectProductDomainAndRange(dom);
-    domAsList := List([1 .. Size(dom)], bijections.elementPosition);
-    if bijections.canSort then
-        SetIsSSortedList(domAsList, true);
+    local enum;
+    enum := Enumerator(dom);
+    if IsSSortedList(enum) then
+        return enum;
+    else
+        TryNextMethod();
     fi;
-    return domAsList;
 end);
 
 InstallMethod(Enumerator,
@@ -135,7 +140,6 @@ function(dom)
 end);
 
 #############################################################################
-##
 #
 # If every component of dom is sortable (see CanEasilySortElements), then the
 # bijective mapping we construct will be order preserving.
@@ -220,17 +224,20 @@ function(dom)
     fi;
     elementPosition := function(x)
         local tuple, currentComp, rem, i;
-        tuple := [];
+        tuple := ListWithIdenticalEntries(nrComps, 0);
+        # Note that the first entry of a direct product element stores its
+        # length.
+        tuple[1] := nrComps;
         # Correction since lists don't start at 0.
         x := x - 1;
         currentComp := compsAsLists[nrComps];
         rem := RemInt(x, sizes[nrComps]);
-        tuple[nrComps] := Immutable(currentComp[rem + 1]);
+        tuple[nrComps + 1] := Immutable(currentComp[rem + 1]);
         for i in [nrComps - 1 , nrComps - 2 .. 1] do
             x := (x - rem) / sizes[i + 1];
             currentComp := compsAsLists[i];
             rem := RemInt(x, sizes[i]);
-            tuple[i] := Immutable(currentComp[rem + 1]);
+            tuple[i + 1] := Immutable(currentComp[rem + 1]);
         od;
         # This avoids DirectProductElementNC which copies its second argument.
         # Since we just created `tuple` ourselves we don't need to do that.
