@@ -852,6 +852,9 @@ InstallGlobalFunction( WreathProductProductAction, function( G, H )
 
     N := deg ^ n;
     gens := [  ];
+    # Compute generators of the base group
+    # FIXME: these are way too many, we only need one set of gens for each
+    # orbit of the top group
     basegens:=List([1..n],i->[]);
     if IsRange( domG ) then
         firstOfDomG := domG[1];
@@ -888,6 +891,7 @@ InstallGlobalFunction( WreathProductProductAction, function( G, H )
         od;
     od;
     hgens:=[];
+    # Compute generators of the top group
     for gen  in GeneratorsOfGroup( I )  do
         list := [  ];
         for p  in [ 0 .. N - 1 ]  do
