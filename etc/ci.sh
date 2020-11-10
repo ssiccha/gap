@@ -31,7 +31,6 @@ do
   # restore current directory before each test suite
   cd "$BUILDDIR"
 
-  echo "Running test suite $TEST_SUITE"
   case $TEST_SUITE in
   testspecial | test-compile)
     cd $SRCDIR/tst/$TEST_SUITE
@@ -98,9 +97,9 @@ GAPInput
             Print("-----------------------------------------------------\n");
             Print("Loading $pkg ... \n");
             if LoadPackage("$pkg",false) = true then
-              Print(TextAttr.2, "PASS: $pkg\n\n", TextAttr.reset);
+              Print("PASS: $pkg\n\n");
             else
-              Print(TextAttr.1, "FAIL: $pkg\n\n", TextAttr.reset);
+              Print("FAIL: $pkg\n\n");
               AppendTo("fail.log", "Loading failed : ", "$pkg", "\n");
             fi;
 GAPInput
