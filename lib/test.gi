@@ -520,16 +520,28 @@ InstallGlobalFunction("Test", function(arg)
            rewriteToFile := false,
            breakOnError := false,
            reportDiff := function(inp, expout, found, fnam, line, time)
+             Print(TextAttr.1);
              Print("########> Diff in ");
              if IsStream(fnam) then
                Print("test stream, line ",line,":\n");
              else
                Print(fnam,":",line,"\n");
              fi;
-             Print("# Input is:\n", inp);
-             Print("# Expected output:\n", expout);
-             Print("# But found:\n", found);
+             Print(TextAttr.1);
+             Print("# Input is:\n");
+             Print(TextAttr.reset);
+             Print(inp);
+             Print(TextAttr.1);
+             Print("# Expected output:\n");
+             Print(TextAttr.reset, TextAttr.b2);
+             Print(expout);
+             Print(TextAttr.reset, TextAttr.delline, TextAttr.1);
+             Print("# But found:\n");
+             Print(TextAttr.reset, TextAttr.b1);
+             Print(found);
+             Print(TextAttr.reset, TextAttr.delline, TextAttr.1);
              Print("########\n");
+             Print(TextAttr.reset);
            end,
            subsWindowsLineBreaks := true,
            returnNumFailures := false,

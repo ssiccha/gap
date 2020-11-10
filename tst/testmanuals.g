@@ -14,6 +14,7 @@
 ExamplesReportDiff := function(inp, expout, found, fnam, line, time)
     local tstf, i, loc, res;
 
+    Print(TextAttr.1);
     Print("########> Diff in ");
     if IsStream(fnam) then
         Print("test stream, line ",line,"\n");
@@ -41,6 +42,7 @@ ExamplesReportDiff := function(inp, expout, found, fnam, line, time)
     Print("# Expected output:\n", expout);
     Print("# But found:\n", found);
     Print("########\n");
+    Print(TextAttr.reset);
 end;
 
 TestManualChapter := function(filename)
