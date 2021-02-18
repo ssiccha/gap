@@ -6,6 +6,40 @@ on:
   pull_request:
 
 jobs:
+  build32:
+
+    runs-on: windows-latest
+
+    env:
+      CFLAGS: "-O2 -g"
+      CXXFLAGS: "-O2 -g"
+      LDFLAGS: ""
+      # default config flags: enable debug asserts
+      CONFIGFLAGS: "--enable-debug"
+      COVERALLS_PARALLEL: false
+      TEST_SUITES: testinstall
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: gap-actions/setup-cygwin-for-gap@test32
+      with:
+        CYGWIN_ABI: 32
+
+    # CHERE_INVOKING=1 lets us start a 'login shell' (to set paths) without changing directory
+    - name: Compile GAP and download packages
+      run: |
+        @ECHO ON
+        SET CHERE_INVOKING=1
+        C:\cygwin64\bin\bash -l -c 'bash etc/ci-prepare.sh'
+      shell: cmd
+
+    - name: Run tests
+      run: |
+        SET CHERE_INVOKING=1
+        C:\cygwin64\bin\bash -l -c 'bash etc/ci.sh'
+      shell: cmd
+
   build:
 
     runs-on: windows-latest
