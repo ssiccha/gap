@@ -41,3 +41,5 @@ jobs:
         run:  python -u ./dev/release/make_tarball.py
       - name: "Make GitHub release"
         run:  python -u ./dev/release/make_github_release.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
