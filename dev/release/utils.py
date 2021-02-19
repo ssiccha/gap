@@ -8,7 +8,7 @@ import sys
 from getpass import getpass
 import github
 
-CURRENT_REPO_NAME = "gap-system/gap"
+CURRENT_REPO_NAME = "ssiccha/gap"
 # Initialized by initialize_github
 GITHUB_INSTANCE = None
 CURRENT_REPO = None
