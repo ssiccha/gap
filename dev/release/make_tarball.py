@@ -91,6 +91,13 @@ badfiles = [
 ]
 
 with working_directory(tmpdir + "/" + basename):
+    # This sets the version, release day and year of the release we are
+    # creating.
+    notice("Patch configure.ac")
+    patchfile("configure.ac", r"m4_define\(\[gap_version\],[^\n]+", r"m4_define([gap_version], ["+gapversion+"])")
+    patchfile("configure.ac", r"m4_define\(\[gap_releaseday\],[^\n]+", r"m4_define([gap_releaseday], ["+commit_date+"])")
+    patchfile("configure.ac", r"m4_define\(\[gap_releaseyear\],[^\n]+", r"m4_define([gap_releaseyear], ["+commit_year+"])")
+
     notice("Removing unwanted files")
     shutil.rmtree("benchmark")
     shutil.rmtree("dev")
@@ -100,13 +107,6 @@ with working_directory(tmpdir + "/" + basename):
             os.remove(f)
         except:
             pass
-
-    # This sets the version, release day and year of the release we are
-    # creating.
-    notice("Patch configure.ac")
-    patchfile("configure.ac", r"m4_define\(\[gap_version\],[^\n]+", r"m4_define([gap_version], ["+gapversion+"])")
-    patchfile("configure.ac", r"m4_define\(\[gap_releaseday\],[^\n]+", r"m4_define([gap_releaseday], ["+commit_date+"])")
-    patchfile("configure.ac", r"m4_define\(\[gap_releaseyear\],[^\n]+", r"m4_define([gap_releaseyear], ["+commit_year+"])")
 
     # Building GAP
     notice("Running autogen.sh")
