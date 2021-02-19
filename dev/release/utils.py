@@ -163,4 +163,7 @@ def initialize_github(token=None):
     g = github.Github(token)
     GITHUB_INSTANCE = g
     notice(f"Accessing repository {CURRENT_REPO_NAME}")
-    CURRENT_REPO = GITHUB_INSTANCE.get_repo(CURRENT_REPO_NAME)
+    try:
+        CURRENT_REPO = GITHUB_INSTANCE.get_repo(CURRENT_REPO_NAME)
+    except github.GithubException:
+        error("Error: the access token may be incorrect")
