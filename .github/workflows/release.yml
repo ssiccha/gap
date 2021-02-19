@@ -1,0 +1,43 @@
+name: release
+
+# Trigger the workflow on push or pull request
+on:
+  push:
+#  workflow_run: # manual trigger
+# https://docs.github.com/en/actions/reference/events-that-trigger-workflows#create
+# on tag push or branch creation
+# create:
+
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Set up Python"
+        uses: actions/setup-python@v2
+      - name: "Install Python modules"
+        run:  pip3 install PyGithub requests python-dateutil
+      - name: "Install latex"
+        run: |
+            packages=(
+              texlive-latex-base
+              texlive-latex-recommended
+              texlive-latex-extra
+              texlive-extra-utils
+              texlive-fonts-recommended texlive-fonts-extra
+            )
+            sudo apt-get install "${packages[@]}"
+        shell: bash
+      - name: "Compile GAP and download packages"
+        run: bash dev/ci-prepare.sh
+      - name: "Run tests"
+        run: bash dev/ci.sh
+        env:
+          TEST_SUITES: testinstall
+      - name: "Make tarballs"
+        run:  python -u ./dev/release/make_tarball.py
+      - name: "Make GitHub release"
+        run:  python -u ./dev/release/make_github_release.py
