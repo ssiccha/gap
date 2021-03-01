@@ -53,3 +53,7 @@ jobs:
         run: python -u ./dev/releases/make_github_release.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Start SSH if a previous step failed"
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
