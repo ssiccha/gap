@@ -3005,3 +3005,19 @@ local cl,cnt,bg,bw,bo,bi,k,gens,go,imgs,params,emb,clg,sg,vsu,c,i;
   Info(InfoMorph,1,Length(emb)," found -> ",Length(cl)," homs");
   return cl;
 end);
+
+# Compute normalizer of simple groups that are not in "standard" representation
+# G: Source( iso ),
+# H: Range( iso )
+# aut: AutomorphismGroup(G),
+# iso: Isomorphism from G to H
+# Returns: Automorphism group of H
+AutViaIso := function( aut, iso )
+    local gensautG, gensautH, autH;
+    gensautG := GeneratorsOfGroup( aut );
+    gensautH := List( gensautG, x ->
+        CompositionMapping( iso, x, InverseGeneralMapping( iso ) ) );
+    autH := Group( gensautH );
+    SetSize( autH, Size( aut ) );
+    return autH;
+end;
