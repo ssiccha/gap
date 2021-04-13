@@ -28,9 +28,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Ping"
+      - name: Get branch name
+        id: get-branch
+        run: echo ::set-output name=branch::${GITHUB_REF#refs/*/}
+      - name: Determine whether CI status changed
+        uses: Jimdo/should-i-notify-action@0f48901c482c651cba9dc19a03efc068b402789b
+        id: should_notify
+        with:
+          branch: ${{ steps.vars.outputs.branch }}
+          needs_context: ${{ toJson(needs) }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send slack notification
         uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522
-        with: 
+        if: steps.should_notify.outputs.should_send_message == 'yes'
+        with:
           status: Failure
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
