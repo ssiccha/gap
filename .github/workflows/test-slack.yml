@@ -1,0 +1,36 @@
+name: slack test
+
+# Trigger the workflow on push or pull request
+on:
+  - push
+  - pull_request
+
+
+jobs:
+  always-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+
+  always-success:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+
+  slack-test:
+    name: slack test
+    needs:
+      - always-fail
+      - always-success
+    if: ${{ failure() }}
+    # Don't run this twice on PRs for branches pushed to the same repository
+    #if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Ping"
+        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522
+        with: 
+          status: Failure
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
