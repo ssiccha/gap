@@ -22,7 +22,7 @@ jobs:
     needs:
       - always-fail
       - always-success
-    if: ${{ failure() }}
+    if: ${{ always() && github.event_name == 'push'  && github.repository == 'ssiccha/gap'}}
     # Don't run this twice on PRs for branches pushed to the same repository
     #if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
     runs-on: ubuntu-latest
