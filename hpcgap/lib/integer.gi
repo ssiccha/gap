@@ -29,6 +29,7 @@ SetGeneratorsOfLeftModule( Integers, [ 1 ] );
 SetIsFiniteDimensional( Integers, true );
 SetUnits( Integers, [ -1, 1 ] );
 SetIsWholeFamily( Integers, false );
+ErrorNoReturn("test");
 
 
 #############################################################################
