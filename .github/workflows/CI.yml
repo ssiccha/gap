@@ -274,3 +274,21 @@ jobs:
         run: |
           SET CHERE_INVOKING=1
           C:\cygwin64\bin\bash -l -c "bash dev/ci.sh"
+
+  slack-notification-on-failure:
+    name: Send slack notification on CI failure
+    needs:
+      - test-unix
+      - test-cygwin
+    if: ${{ failure() && github.event_name == 'push' }}
+    # Don't run this twice on PRs for branches pushed to the same repository
+    #if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Send slack notification on CI failure"
+        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522
+        with:
+          status: Failure
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
