@@ -7,12 +7,12 @@ on:
 
 
 jobs:
-  always-fail:
+  job1:
     runs-on: ubuntu-latest
     steps:
-      - run: exit 1
+      - run: exit 0
 
-  always-success:
+  job2:
     runs-on: ubuntu-latest
     steps:
       - run: exit 0
@@ -20,8 +20,8 @@ jobs:
   slack-test:
     name: slack test
     needs:
-      - always-fail
-      - always-success
+      - job1
+      - job2
     if: ${{ always() && github.event_name == 'push'  && github.repository == 'ssiccha/gap'}}
     # Don't run this twice on PRs for branches pushed to the same repository
     #if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
