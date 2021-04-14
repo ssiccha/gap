@@ -33,8 +33,12 @@ jobs:
         run: echo ::set-output name=branch::${GITHUB_REF#refs/*/}
       - name: Get workflow status
         id: get-status
+        shell: bash
         run: |
-          echo ${{ needs.job1.result }}
+          status="success"
+          if [[ ${{ needs.job1.result }} = "failure" || ${{ needs.job2.result }} = "failure" ]]; then
+            status="failure"
+          fi
           echo ::set-output name=status::${{ needs.job1.result }}
       - name: Determine whether CI status changed
         uses: Jimdo/should-i-notify-action@0f48901c482c651cba9dc19a03efc068b402789b
