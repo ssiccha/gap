@@ -39,7 +39,7 @@ jobs:
           if [[ ${{ needs.job1.result }} = "failure" || ${{ needs.job2.result }} = "failure" ]]; then
             status="failure"
           fi
-          echo ::set-output name=status::${{ needs.job1.result }}
+          echo ::set-output name=status::$status
       - name: Determine whether CI status changed
         uses: gap-actions/should-i-notify-action@v1
         id: should_notify
