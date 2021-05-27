@@ -24,7 +24,7 @@ TODO: upload the ref manual for GAP master branch somewhere and add a link to th
 # TODO list
 
 This list is a collection of all previous TODO lists. However, it may not be up to date.
-### Easy (hopefully) ways to help
+### Good first issues (hopefully) 
 
 - help finish PR #2973 -- this updates `IsPlistMatrixRep` to the latest version
   of MatrixObj
@@ -84,21 +84,14 @@ This list is a collection of all previous TODO lists. However, it may not be up 
   - Introduce `IsMatrixOrMatrixObj`
     [#4503](https://github.com/gap-system/gap/issues/4503)
   - `IsMatrixObj` does not imply `IsOrdinaryMatrix`.
-  - All current implementations of `IsMatrixObj` representations
-    are in fact intended for matrices with the ``usual`` matrix product
-    and hence get the filter `IsOrdinaryMatrix` (explicitly)
-  - Whenever a method requires that some of its arguments are matrices
-    that have to be multiplied via the ``usual`` matrix product,
-    the filter `IsOrdinaryMatrix` must be required for these arguments.
+    - All current implementations of `IsMatrixObj` representations
+      are in fact intended for matrices with the ``usual`` matrix product
+      and hence get the filter `IsOrdinaryMatrix` (explicitly)
+    - Whenever a method requires that some of its arguments are matrices
+      that have to be multiplied via the ``usual`` matrix product,
+      the filter `IsOrdinaryMatrix` must be required for these arguments.
 
   (Thomas is going to make the necessary changes.)
-
-- Should `IsRowVector` imply `IsVectorObj`,
-  in analogy to the implication from `IsMatrix` to `IsMatrixObj`?
-  On the one hand, there are only few operations involving row vectors
-  where this question is relevant.
-  On the other hand, the description of these operations becomes easier
-  if this implication holds (see `RowsOfMatrix`).
 
 - Decide and document what `ShallowCopy` should do for IsVectorObj 
   and IsMatrixObj objects. 
@@ -202,15 +195,8 @@ This list is a collection of all previous TODO lists. However, it may not be up 
   are left out to simplify the interface.
 
 
-### Improvements of exisiting MatrixObj code
 
-- [ ] Go through all the operations/attributes in `matobj2.gd`; then, if we
-- decided to keep the...
-  - [ ] write a proper documentation comment;
-  - [ ] verify that a default implementation has been provided (if applicable),
-    else provide one;
-  - [ ] write some tests
-  - [ ] possibly provide optimized versions for plistrep, 8bit rep, GF2 rep,
+### New MatrixObj functions, methods, operations, documentation, and tests
 
 - add some proper and complete MatrixObj implementations
   - finish `IsPlistMatrixRep`, see "Easy ways to help"
@@ -224,55 +210,6 @@ This list is a collection of all previous TODO lists. However, it may not be up 
     - [a relevant issue](https://github.com/gap-system/gap/issues/2148)
   - add types of sparse matrices
 
-- For the various constructors, perhaps imitate what we do
-  for e.g. group constructors:
-  Allow to omit the filter,
-  and try to choose a "good" default representation?
-
-- Replace `ChangedBaseDomain` (which is defined for both vector and
-  matrix objects) by `VectorWithChangedBaseDomain`,
-  `MatrixWithChangedBasedDomain`.
-
-- Is the ordering of arguments sensible and consistent?
-  (For example,
-  better define `CopySubMatrix( dst, drows, dcols,  src, srows, scols )`,
-  and unify the argument order in `NewMatrix( filt, R, ncols, list )`
-  and `Matrix( filt, R, list, ncols )`?
-  And what about `NullMat`/`ZeroMatrix` and
-  `IdentityMat`/`IdentityMatrix`?)
-
-- Are the argument names sensible and consistent? For example we sometimes
-  write "rep" and sometimes "filt" for the same thing.
-  And we sometimes write "rows, colss", other times "ncols", or "m,n", or...
-
-- Are the operations for vector and matrix objects consistent?
-
-#### Done
-
-- [x] `RowLength` seems like a really bad idea. I propose that instead we add
-  `NumberRows` and `NumberColumns` to the MatrixObj API and ditch `RowLength`.
-  Ideally I'd also disallow `Length` for MatrixObj, but perhaps it's useful to
-  have it (as alias for NumberRows???) to make transitioning code to using
-  MatrixObj easier. _But_ I think it would be better to start without it, and
-  see whether we really can benefit from it. I.e. show me code that becomes
-  trivially able to use MatrixObj because of Length, and we can keep it... but
-  if you have to modify the code anyway, I think changing it to use
-  `NumberRows` is better
-  
-* [x] some love for `foo[i,j]` syntax
-  * [x] benchmark it via `foo[i][j]` resp. `MatElm(foo,i,j)`
-  * [x] look into replacing the existing non-optimized dispatch code for
-    `foo[i,j]` by something that is faster in special cases: Right now,
-    `foo[i,j]` translates to `foo[  [i,j] ]` (so a temporary plist is created),
-    and then we dispatch generically to methods for `\[\]` resp. `\[\]:=`; we
-    could avoid creating the temporary plist, and instead dispatch through
-    `MatElm` resp. `SetMatElm`
-  * [x] ensure `foo[i,j]` also works for plists-of-plists resp. for `IsMatrix`;
-    and in addition, see about extending the hot path from above for this, i.e.
-    don't even dispatch through `(Set)MatElm`, but directly modify the list; 
-  * [x] perhaps also have hot paths for compressed matrices???
-
-### New MatrixObj functions, methods, operations, documentation, and tests
 
 - Replace `EmptyMatrix` and `NullMapMatrix` by or make them into `IsMatrixObj`
   objects.
@@ -302,7 +239,7 @@ This list is a collection of all previous TODO lists. However, it may not be up 
 
 - introduce `OneOfBaseDomain`, `ZeroOfBaseDomain` (done)
 
-### Adapting the library (and packages?)
+### Adapting the library
 
 - [ ] go through all (well, at least as many as possible) functions in GAP that
   support matrices as input, and teach them to support `MatrixObj`
@@ -314,15 +251,7 @@ This list is a collection of all previous TODO lists. However, it may not be up 
   - run these matrices through the generic test suites being generated
     below, to find and fix any violation
   - [empty compressed vectors](https://github.com/gap-system/gap/issues/2121)
-- enhance [`cvec`](https://github.com/gap-packages/cvec) to properly
-  implement MatrixObj/VectorObj
-  - the `cvec` package has an alternative implementation of compressed
-    vectors and matrices
-  - it is based on an older version of the MatrixObj spec
-  - it may also be useful to turn off support for `mat[i]` for type cmat,
-    at least temporarily, to find places where it still accesses that
-- [ ][`meataxe64` ](https://github.com/gap-packages/meataxe64)
-
+  
 - [ ] make it possible to create groups generated by matrix objs, and make
   sure as many things as possible "work" with it; this probably involves
   getting the `NiceMonomorphism` code to deal with MatrixObjs (defined over
@@ -363,7 +292,6 @@ This list is a collection of all previous TODO lists. However, it may not be up 
 - [ ] Make it possible to create groups of MatrixObj matrices with
   `Group([mat1,mat2,...])`.
 - [ ] Teach the `NiceMonomorphism` code for groups to support `MatrixObj`
-- [ ] Teach `recog` to use `MatrixObj`
 
 - various operations on gf2 and 8bit matrix objects can silently convert
   them to plists-of-plists; e.g. it is allows to unbind an element in the
@@ -373,7 +301,7 @@ This list is a collection of all previous TODO lists. However, it may not be up 
   perform a manual conversion, and instead let accesses like the above
   generate an error, to help track down bugs.
 
-- I`d like to rename `vecmat.{gi,gd}` to e.g. `vecmat_gf2.{gi,gd}`, to
+- I'd like to rename `vecmat.{gi,gd}` to e.g. `vecmat_gf2.{gi,gd}`, to
   indicate the purpose of those files; and then move any generic methods for
   (compressed) matrices and vectors in it into another file
 
@@ -426,6 +354,74 @@ This list is a collection of all previous TODO lists. However, it may not be up 
 - Replace `PositionNot( obj, zero )` by `PositionNonZero( obj )`.
   (And change the default methods for `PositionNonZero`.)
   (done)
+  
+### Adapting the packages
+- enhance [`cvec`](https://github.com/gap-packages/cvec) to properly implement MatrixObj/VectorObj
+  - the `cvec` package has an alternative implementation of compressed
+    vectors and matrices
+  - it is based on an older version of the MatrixObj spec
+  - it may also be useful to turn off support for `mat[i]` for type cmat,
+    at least temporarily, to find places where it still accesses that
+- [ ] [`meataxe64` ](https://github.com/gap-packages/meataxe64)
+- [ ] Teach `recog` to use `MatrixObj`
+
+### Improvements of exisiting MatrixObj code
+
+- [ ] Go through all the operations/attributes in `matobj2.gd`; then, if we
+- decided to keep the...
+  - [ ] write a proper documentation comment;
+  - [ ] verify that a default implementation has been provided (if applicable),
+    else provide one;
+  - [ ] write some tests
+  - [ ] possibly provide optimized versions for plistrep, 8bit rep, GF2 rep,
+
+- For the various constructors, perhaps imitate what we do
+  for e.g. group constructors:
+  Allow to omit the filter,
+  and try to choose a "good" default representation?
+
+- Replace `ChangedBaseDomain` (which is defined for both vector and
+  matrix objects) by `VectorWithChangedBaseDomain`,
+  `MatrixWithChangedBasedDomain`.
+
+- Is the ordering of arguments sensible and consistent?
+  (For example,
+  better define `CopySubMatrix( dst, drows, dcols,  src, srows, scols )`,
+  and unify the argument order in `NewMatrix( filt, R, ncols, list )`
+  and `Matrix( filt, R, list, ncols )`?
+  And what about `NullMat`/`ZeroMatrix` and
+  `IdentityMat`/`IdentityMatrix`?)
+
+- Are the argument names sensible and consistent? For example we sometimes
+  write "rep" and sometimes "filt" for the same thing.
+  And we sometimes write "rows, colss", other times "ncols", or "m,n", or...
+
+- Are the operations for vector and matrix objects consistent?
+
+#### Done
+
+- [x] `RowLength` seems like a really bad idea. I propose that instead we add
+  `NumberRows` and `NumberColumns` to the MatrixObj API and ditch `RowLength`.
+  Ideally I'd also disallow `Length` for MatrixObj, but perhaps it's useful to
+  have it (as alias for NumberRows???) to make transitioning code to using
+  MatrixObj easier. _But_ I think it would be better to start without it, and
+  see whether we really can benefit from it. I.e. show me code that becomes
+  trivially able to use MatrixObj because of Length, and we can keep it... but
+  if you have to modify the code anyway, I think changing it to use
+  `NumberRows` is better
+  
+* [x] some love for `foo[i,j]` syntax
+  * [x] benchmark it via `foo[i][j]` resp. `MatElm(foo,i,j)`
+  * [x] look into replacing the existing non-optimized dispatch code for
+    `foo[i,j]` by something that is faster in special cases: Right now,
+    `foo[i,j]` translates to `foo[  [i,j] ]` (so a temporary plist is created),
+    and then we dispatch generically to methods for `\[\]` resp. `\[\]:=`; we
+    could avoid creating the temporary plist, and instead dispatch through
+    `MatElm` resp. `SetMatElm`
+  * [x] ensure `foo[i,j]` also works for plists-of-plists resp. for `IsMatrix`;
+    and in addition, see about extending the hot path from above for this, i.e.
+    don't even dispatch through `(Set)MatElm`, but directly modify the list; 
+  * [x] perhaps also have hot paths for compressed matrices???
 
 ### Tests
 
