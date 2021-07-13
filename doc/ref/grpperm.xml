@@ -360,8 +360,7 @@ things become faster and the result is guaranteed to be correct.
 <P/>
 <Log><![CDATA[
 gap> h:=Group( GeneratorsOfGroup( op ) );;
-gap> SetSize( h, 2317591180800 );
-gap> StabChain( h );;  time;
+gap> StabChain( h, rec( limit := 2317591180800 ) );;  time;
 170
 ]]></Log>
 <P/>
